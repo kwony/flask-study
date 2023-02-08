@@ -61,6 +61,8 @@ def login():
             "SELECT * FROM user where username = ?", (username,)
         ).fetchone()
 
+        print("user", user)
+
         if user is None:
             error = "Incorrect username"
         elif not check_password_hash(user["password"], password):
@@ -86,7 +88,7 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = (
-            get_db().execute("SELECT * FROM user WHERE id = ?", (user_id)).fetchone()
+            get_db().execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
         )
 
 
@@ -98,6 +100,8 @@ def logout():
 
 # edit, write, delete 처럼 로그인이 필요한 곳에서 서용하려고 쓰는 미들웨어
 def login_requred(view):
+    print("login_required called")
+
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:

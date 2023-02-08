@@ -38,9 +38,10 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password) values (?. ?)",
+                    "INSERT INTO user (username, password) VALUES (?, ?)",
                     (username, generate_password_hash(password)),
                 )
+                db.commit()
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
@@ -49,7 +50,7 @@ def register():
     return render_template("auth/register.html")
 
 
-@bp.route("/login", methods("GET", "POST"))
+@bp.route("/login", methods=("GET", "POST"))
 def login():
     if request.method == "POST":
         username = request.form["username"]

@@ -20,7 +20,11 @@ def test_index(client: FlaskClient, auth: AuthActions):
 ))
 # 로그인 안한 경우는 다 여기로 가야하므로
 def test_login_required(client: FlaskClient, path: str):
-    response = client.post(path)
+    if 'delete' in path:
+        response = client.delete(path)
+    else:
+        response = client.post(path)
+
     assert response.headers["Location"] == "/auth/login"
 
 
@@ -32,7 +36,7 @@ def test_author_required(app: Flask, client: FlaskClient, auth: AuthActions):
 
     auth.login()
     assert client.post('/1/update').status_code == 403
-    assert client.post('/1/delete').status_code == 403
+    assert client.delete('/1/delete').status_code == 403
 
 # 여러 변수를 내려보내줄 수 있음
 @pytest.mark.parametrize('path', (
@@ -41,7 +45,11 @@ def test_author_required(app: Flask, client: FlaskClient, auth: AuthActions):
 ))
 def test_exists_required(client: FlaskClient, auth: AuthActions, path: str):
     auth.login()
-    assert client.post(path).status_code == 404
+
+    if 'delete' in path:
+        assert client.delete(path).status_code == 404
+    else :
+        assert client.post(path).status_code == 404
 
 
 def test_create(client: FlaskClient, auth: AuthActions, app: Flask):
@@ -75,7 +83,7 @@ def test_create_update_validation(client: FlaskClient, auth: AuthActions, path: 
 
 def test_delete(client: FlaskClient, auth: AuthActions, app: Flask):
     auth.login()
-    response = client.post('/1/delete')
+    response = client.delete('/1/delete')
     assert response.headers["Location"] == "/"
 
     with app.app_context():

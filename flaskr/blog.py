@@ -8,8 +8,7 @@ import sqlite3
 
 bp = Blueprint("blog", __name__)
 
-
-@bp.route("/")
+@bp.get("/")
 def index():
     db = get_db()
     posts = db.execute(
@@ -98,7 +97,7 @@ def update(id):
 
     return render_template("blog/update.html", post=post)
 
-@bp.route("/<int:id>/delete", methods=("POST",))
+@bp.delete("/<int:id>/delete")
 @login_requred
 def delete(id: int):
     get_post(id)

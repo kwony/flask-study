@@ -16,6 +16,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
 
+"""
+Blueprint
+api path랑 앱과 관련된 함수들이 애플리케이션에 등록할 수 있는 모음집이라고 보면 된다.
+
+예로, create_app 안에 @app.route 는 요구사항이 늘어날수록 매핑되는 함수가 끊임없이 늘어날 수 있는데
+Blueprint를 활용하면 구조적으로 분리해서 관리할 수 있다.
+
+spring, nestjs의 controller 개념이라고 보면 된다
+
+"""
 bp = Blueprint(
     "auth", __name__, url_prefix="/auth"
 )  # view와 code를 연결해준다고 하는데 사실상 컨트롤러 같은 개념으로 보면 될 것 같다.

@@ -4,6 +4,8 @@ from werkzeug.exceptions import abort
 from flaskr.auth import login_requred
 from flaskr.db import get_db
 
+import sqlite3
+
 bp = Blueprint("blog", __name__)
 
 
@@ -15,6 +17,8 @@ def index():
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC"
     ).fetchall()
+
+    print(posts)
 
     return render_template("blog/index.html", posts=posts)
 
@@ -72,7 +76,7 @@ def get_post(id: int, check_author=True):
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
 @login_requred
 def update(id):
-    post = get_post(id)
+    post: sqlite3.Row = get_post(id)
 
     if request.method == "POST":
         title = request.form["title"]
@@ -91,6 +95,12 @@ def update(id):
             )
             db.commit()
             return redirect(url_for("blog.index"))
+        
+    print('post.keys()', post.keys())
+
+    # for key, value in post.items():
+    #     print('key: ', key, " value: ", value)
+
     return render_template("blog/update.html", post=post)
 
 @bp.route("/<int:id>/delete", methods=("POST",))

@@ -31,9 +31,9 @@ def register():
         error = None
 
         if not username:
-            error = "Username is required"
+            error = "Username is required."
         elif not password:
-            error = "Password is required"
+            error = "Password is required."
 
         if error is None:
             try:
@@ -106,6 +106,6 @@ def login_requred(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for("auth.login"))
-        return view(**kwargs)
+        return view(**kwargs) 
 
     return wrapped_view

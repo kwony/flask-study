@@ -59,11 +59,6 @@ def get_post(id: int, check_author=True):
         .fetchone()
     )
 
-    import json
-
-    print("post[0]", post[0])
-    print("post[1]", post[1])
-
     if post is None:
         abort(404, f"Post id {id} doesn't exist.")
 
